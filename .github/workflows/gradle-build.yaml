@@ -1,4 +1,4 @@
-name: "Build and push images by using maven"
+name: "Build and push images by using gradle"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-jvm-maven
+  IMAGE_NAME: ${{ github.repository }}-jvm-gradle
 
 jobs:
   build-and-push-image:
@@ -19,12 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - file: src/main/docker/Dockerfile.jvm
-            image: ${{ github.repository }}-jvm-maven
-            build: ./mvnw package
-          - file: src/main/docker/Dockerfile.native
-            image: ${{ github.repository }}-native-maven
-            build: ./mvnw package -Pnative
+          - file: src/main/docker/Dockerfile.jvm.gradle
+            image: ${{ github.repository }}-jvm-gradle
+            build: ./gradlew build
+          - file: src/main/docker/Dockerfile.native.gradle
+            image: ${{ github.repository }}-native-gradle
+            build: ./gradlew build -Dquarkus.package.type=native
     permissions:
       contents: read
       packages: write
@@ -38,9 +38,9 @@ jobs:
         with:
           java-version: 17
           distribution: 'microsoft'
-          cache: maven
+          cache: gradle
 
-      - name: Build with maven
+      - name: Build with gradle
         run: ${{ matrix.build }}
 
       - name: Login container registry
