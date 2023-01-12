@@ -11,7 +11,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.HttpHeaders;
 
-@Path("/{.+}")
+@Path("/")
 public class EchoResource {
 
     @GET
